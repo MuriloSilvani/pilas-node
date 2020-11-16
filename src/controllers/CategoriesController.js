@@ -16,6 +16,13 @@ module.exports = {
 
     const response = await db.insert(newCategory)
 
+    if (req.connectedUsers) {
+      Object.keys(req.connectedUsers).map(client => {
+        req.io.to(client).emit('update_categories')
+        return true
+      })
+    }
+
     return res.status(201).json(response)
   },
 
